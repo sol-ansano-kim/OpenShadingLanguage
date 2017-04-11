@@ -16,13 +16,12 @@ dist: precise
 # excluded).
 env:
     matrix:
-      - WHICHGCC=4.8 USE_CPP11=1
-      - WHICHGCC=4.9 USE_CPP11=1
-      - WHICHGCC=5 USE_CPP11=1
-      - WHICHGCC=6 USE_CPP11=1
-      - WHICHGCC=4.8 OIIOBRANCH=RB-1.7 USE_CPP11=0
-      - WHICHGCC=4.8 OIIOBRANCH=RB-1.7 USE_CPP11=1
-      - WHICHGCC=4.8 DEBUG=1 USE_CPP11=1
+      - WHICHGCC=4.8 USE_CPP11=1 OIIOBRANCH=RB-1.7
+      - WHICHGCC=5 USE_CPP11=1 OIIOBRANCH=RB-1.7
+      - WHICHGCC=6 USE_CPP11=1 OIIOBRANCH=RB-1.7
+      - WHICHGCC=4.8 USE_CPP11=0 OIIOBRANCH=RB-1.7
+      - WHICHGCC=4.8 USE_CPP11=1 OIIOBRANCH=RB-1.7
+      - WHICHGCC=4.8 DEBUG=1 USE_CPP11=1 OIIOBRANCH=RB-1.7
 
 # Add-ons: specify apt packages for Linux
 addons:
@@ -116,13 +115,10 @@ matrix:
         compiler: clang
       - os: osx
         compiler: clang
-        env: WHICHGCC=4.9 USE_CPP11=1
+        env: WHICHGCC=5 USE_CPP11=1 OIIOBRANCH=RB-1.7
       - os: osx
         compiler: clang
-        env: WHICHGCC=5 USE_CPP11=1
-      - os: osx
-        compiler: clang
-        env: WHICHGCC=6 USE_CPP11=1
+        env: WHICHGCC=6 USE_CPP11=1 OIIOBRANCH=RB-1.7
 
 notifications:
     email:
