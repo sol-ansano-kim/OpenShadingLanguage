@@ -4,3 +4,7 @@ build
 \#*\#
 *.pyc
 *.log
+release/
+debug/
+excons.cache
+.sconsign.dblite
