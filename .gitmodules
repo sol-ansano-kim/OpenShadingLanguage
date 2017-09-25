@@ -4,3 +4,12 @@
 [submodule "llvm"]
 	path = llvm
 	url = https://github.com/gatgui/llvm
+[submodule "oiio"]
+	path = oiio
+	url = https://github.com/sol-ansano-kim/oiio.git
+[submodule "openexr"]
+	path = openexr
+	url = https://github.com/gatgui/openexr
+[submodule "pugixml"]
+	path = pugixml
+	url = https://github.com/zeux/pugixml.git
