@@ -8,3 +8,8 @@ release/
 debug/
 excons.cache
 .sconsign.dblite
+.sconf_temp/
+*.cmake.config
+*.cmake.outputs
+*.automake.config
+*.automake.outputs
