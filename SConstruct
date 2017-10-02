@@ -13,11 +13,12 @@ llvm_static = excons.GetArgument("use-static-llvm", 1, int)
 oiio_static = excons.GetArgument("use-static-oiio", 1, int)
 boost_static = excons.GetArgument("use-static-boost", 1, int)
 extern_libs = excons.GetArgument("osl-ext-libs", "", str)
+osl_static = excons.GetArgument("osl-static", 1, int)
 
 OSL_OPTS = {}
 OSL_DEPENDENCIES = []
 OSL_OPTS["LINKSTATIC"] = "ON"
-OSL_OPTS["BUILDSTATIC"] = "OFF"
+OSL_OPTS["BUILDSTATIC"] = "ON" if osl_static else "OFF"
 OSL_OPTS["CMAKE_VERBOSE_MAKEFILE"] = "OFF"
 OSL_OPTS["EXTERNAL_LIBS"] = extern_libs
 
