@@ -17,7 +17,7 @@ SET ( liboslexec_srcs
     )
 
 # oslcomp symbols used in oslexec
-if (NOT BUILDSTATIC)
+if (BUILDSTATIC)
     LIST(APPEND liboslexec_srcs
         ../liboslcomp/ast.cpp
         ../liboslcomp/codegen.cpp
@@ -155,6 +155,10 @@ TARGET_LINK_LIBRARIES ( oslexec
                         ${LLVM_LIBRARY} ${LLVM_MCJIT_LIBRARY}
                         ${LLVM_LIBRARIES} ${LLVM_LDFLAGS}
                         ${LLVM_SYSTEM_LIBRARIES})
+
+if (NOT BUILDSTATIC)
+    TARGET_LINK_LIBRARIES (oslexec oslcomp)
+endif ()
 
 if (EXTERNAL_LIBS)
     TARGET_LINK_LIBRARIES (oslexec ${EXTERNAL_LIBS})
