@@ -9,14 +9,17 @@ env = excons.MakeBaseEnv()
 out_basedir = excons.OutputBaseDirectory()
 out_incdir = out_basedir + "/include"
 out_libdir = out_basedir + "/lib"
-llvm_static = excons.GetArgument("llvm-static", 1, int)
-
-
+llvm_static = excons.GetArgument("use-static-llvm", 1, int)
+oiio_static = excons.GetArgument("use-static-oiio", 1, int)
+boost_static = excons.GetArgument("use-static-boost", 1, int)
+extern_libs = excons.GetArgument("osl-ext-libs", "", str)
 
 OSL_OPTS = {}
 OSL_DEPENDENCIES = []
 OSL_OPTS["LINKSTATIC"] = "ON"
 OSL_OPTS["BUILDSTATIC"] = "OFF"
+OSL_OPTS["CMAKE_VERBOSE_MAKEFILE"] = "OFF"
+OSL_OPTS["EXTERNAL_LIBS"] = extern_libs
 
 
 ### dependencies
@@ -29,17 +32,18 @@ if not boost_rv["require"]:
     sys.exit(1)
 
 OSL_OPTS["BOOST_ROOT"] = os.path.dirname(boost_rv["incdir"])
+OSL_OPTS["Boost_USE_STATIC_LIBS"] = "ON" if boost_static else "OFF"
 
 
-llvm
+# llvm
 rv = excons.cmake.ExternalLibRequire(OSL_OPTS, "llvm")
 
 if not rv["require"]:
-    excons.PrintOnce("OSL: Build llvm from sources ...")
+    excons.PrintOnce("OSL: Build static llvm from sources ...")
     excons.Call("llvm")
     OSL_OPTS["LLVM_DIRECTORY"] = out_basedir
     OSL_OPTS["LLVM_STATIC"] = "ON"
-    OSL_DEPENDENCIES
+    OSL_DEPENDENCIES.append("llvm.cmake.outputs")
 else:
     OSL_OPTS["LLVM_DIRECTORY"] = os.path.dirname(rv["incdir"])
     OSL_OPTS["LLVM_STATIC"] = "ON" if llvm_static else "OFF"
@@ -48,17 +52,21 @@ else:
 oiio_rv = excons.cmake.ExternalLibRequire(OSL_OPTS, "oiio")
 if not oiio_rv["require"]:
     oiio_opts = {"oiio-static": 1}
-    excons.PrintOnce("OSL: Build oiio from sources ...")
-    excons.Call("oiio", overrides=oiio_opts, imp=["OiioPath"])
+    excons.PrintOnce("OSL: Build static oiio from sources ...")
+    excons.Call("oiio", overrides=oiio_opts, imp=["OiioPath", "OiioExtraLibPaths"])
     OSL_DEPENDENCIES.append(OiioPath(static=True))
 
     OSL_OPTS["OPENIMAGEIOHOME"] = os.path.dirname(os.path.dirname(OiioPath(static=True)))
+    OSL_OPTS["USE_OIIO_STATIC"] = "ON"
+    OSL_OPTS["EXTERNAL_LIBS"] += ";" + ";".join(OiioExtraLibPaths())
+
 else:
     OSL_OPTS["OPENIMAGEIOHOME"] = os.path.dirname(oiio_rv["incdir"])
+    OSL_OPTS["USE_OIIO_STATIC"] = "ON" if oiio_static else "OFF"
 
     openexr_rv = excons.cmake.ExternalLibRequire(OSL_OPTS, "openexr")
     if not openexr_rv["require"]:
-        excons.PrintOnce("OSL: Build openexr from sources ...")
+        excons.PrintOnce("OSL: Build static openexr from sources ...")
         excons.Call("openexr", imp=["IlmImfUtilPath", "IlmImfPath", "IlmThreadPath", "ImathPath", "HalfPath", "IexPath", "IexMathPath"])
 
         OSL_DEPENDENCIES += [IlmImfUtilPath(static=True), IlmImfPath(static=True), IlmThreadPath(static=True), ImathPath(static=True), HalfPath(static=True), IexPath(static=True), IexMathPath(static=True)]
@@ -71,8 +79,6 @@ else:
         OSL_OPTS["OPENEXR_CUSTOM_INCLUDE_DIR"] = openexr_rv["incdir"]
         OSL_OPTS["OPENEXR_CUSTOM_LIB_DIR"] = openexr_rv["libdir"]
 
-print OSL_DEPENDENCIES
-
 
 prjs = []
 
@@ -83,4 +89,6 @@ prjs.append({"name": "osl",
              "cmake-srcs": excons.CollectFiles(["src"], patterns=["*.cpp"], recursive=True),
              "cmake-outputs": map(lambda x: out_incdir + "/OSL/" + os.path.basename(x), excons.glob("src/include/OSL/*.h"))})    
 
-excons.DeclareTargets(env, prjs)
+osl_tgt = excons.DeclareTargets(env, prjs)
+env.Default("osl")
+
