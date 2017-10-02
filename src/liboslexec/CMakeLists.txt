@@ -155,6 +155,11 @@ TARGET_LINK_LIBRARIES ( oslexec
                         ${LLVM_LIBRARY} ${LLVM_MCJIT_LIBRARY}
                         ${LLVM_LIBRARIES} ${LLVM_LDFLAGS}
                         ${LLVM_SYSTEM_LIBRARIES})
+
+if (EXTERNAL_LIBS)
+    TARGET_LINK_LIBRARIES (oslexec ${EXTERNAL_LIBS})
+endif ()
+
 ADD_DEPENDENCIES (oslexec "${CMAKE_SOURCE_DIR}/src/build-scripts/hidesymbols.map")
 
 INSTALL ( TARGETS oslexec RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib )
