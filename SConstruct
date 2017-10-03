@@ -9,9 +9,9 @@ env = excons.MakeBaseEnv()
 out_basedir = excons.OutputBaseDirectory()
 out_incdir = out_basedir + "/include"
 out_libdir = out_basedir + "/lib"
-llvm_static = excons.GetArgument("use-static-llvm", 1, int)
-oiio_static = excons.GetArgument("use-static-oiio", 1, int)
-boost_static = excons.GetArgument("use-static-boost", 1, int)
+llvm_static = excons.GetArgument("llvm-static", 1, int)
+oiio_static = excons.GetArgument("oiio-static", 1, int)
+boost_static = excons.GetArgument("boost-static", 1, int)
 extern_libs = excons.GetArgument("osl-ext-libs", "", str)
 osl_static = excons.GetArgument("osl-static", 1, int)
 
@@ -90,6 +90,10 @@ prjs.append({"name": "osl",
              "cmake-srcs": excons.CollectFiles(["src"], patterns=["*.cpp"], recursive=True),
              "cmake-outputs": map(lambda x: out_incdir + "/OSL/" + os.path.basename(x), excons.glob("src/include/OSL/*.h"))})    
 
-osl_tgt = excons.DeclareTargets(env, prjs)
-env.Default("osl")
+excons.AddHelpOptions(osl="""OSL OPTIONS
+  osl-static=0|1       : Toggle between static and shared library build [1]
+  osl-ext-libs=<str>   : Specify extra libraries for linking. []""")
 
+osl_tgt = excons.DeclareTargets(env, prjs)
+
+env.Default("osl")
