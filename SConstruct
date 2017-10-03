@@ -60,6 +60,11 @@ if not oiio_rv["require"]:
     OSL_OPTS["OPENIMAGEIOHOME"] = os.path.dirname(os.path.dirname(OiioPath(static=True)))
     OSL_OPTS["USE_OIIO_STATIC"] = "ON"
     OSL_OPTS["EXTERNAL_LIBS"] += ";" + ";".join(OiioExtraLibPaths())
+    for ex in OiioExtraLibPaths():
+        ex_name = os.path.splitext(os.path.basename(ex))[0]
+        if ex_name == "zlib" or ex_name == "libz":
+            OSL_OPTS["ZLIB_CUSTOM_INCLUDE_DIRS"] = os.path.abspath(os.path.join(ex, "../../include"))
+            OSL_OPTS["ZLIB_CUSTOM_LIBRARIES"] = ex
 
 else:
     OSL_OPTS["OPENIMAGEIOHOME"] = os.path.dirname(oiio_rv["incdir"])
@@ -79,6 +84,20 @@ else:
     else:
         OSL_OPTS["OPENEXR_CUSTOM_INCLUDE_DIR"] = openexr_rv["incdir"]
         OSL_OPTS["OPENEXR_CUSTOM_LIB_DIR"] = openexr_rv["libdir"]
+
+    zlib_rv = excons.cmake.ExternalLibRequire(OSL_OPTS, "zlib")
+    if not openexr_rv["require"]:
+        excons.PrintOnce("OSL: Build static zlib from sources ...")
+        excons.Call("zlib", imp=["ZlibPath"])
+
+        zlib_path = ZlibPath(static=True)
+        OSL_DEPENDENCIES += [zlib_path]
+        OSL_OPTS["ZLIB_CUSTOM_INCLUDE_DIRS"] = os.path.abspath(os.path.join(zlib_path, "../../include"))
+        OSL_OPTS["ZLIB_CUSTOM_LIBRARIES"] = zlib_path
+
+    else:
+        OSL_OPTS["ZLIB_CUSTOM_INCLUDE_DIRS"] = openexr_rv["incdir"]
+        OSL_OPTS["ZLIB_CUSTOM_LIBRARIES"] = openexr_rv["libpath"]
 
 
 prjs = []

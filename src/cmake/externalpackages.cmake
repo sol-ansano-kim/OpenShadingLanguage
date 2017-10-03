@@ -198,7 +198,14 @@ link_directories ("${Boost_LIBRARY_DIRS}")
 ###########################################################################
 # Partio
 
-find_package (ZLIB)
+if (ZLIB_CUSTOM_LIBRARIES AND ZLIB_CUSTOM_INCLUDE_DIRS)
+    set( ZLIB_INCLUDE_DIRS ${ZLIB_CUSTOM_INCLUDE_DIRS})
+    set( ZLIB_LIBRARIES ${ZLIB_CUSTOM_LIBRARIES})
+else ()
+    find_package (ZLIB)
+endif ()
+
+
 if (USE_PARTIO)
     find_package (Partio)
     if (PARTIO_FOUND)
