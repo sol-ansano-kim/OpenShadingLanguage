@@ -13,3 +13,6 @@
 [submodule "pugixml"]
 	path = pugixml
 	url = https://github.com/zeux/pugixml.git
+[submodule "zlib"]
+	path = zlib
+	url = https://github.com/gatgui/zlib.git
