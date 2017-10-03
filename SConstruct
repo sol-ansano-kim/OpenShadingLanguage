@@ -14,6 +14,7 @@ oiio_static = excons.GetArgument("oiio-static", 1, int)
 boost_static = excons.GetArgument("boost-static", 1, int)
 extern_libs = excons.GetArgument("osl-ext-libs", "", str)
 osl_static = excons.GetArgument("osl-static", 1, int)
+use_llvm_bit_code = excons.GetArgument("osl-use-bit-code", 1, int)
 
 OSL_OPTS = {}
 OSL_DEPENDENCIES = []
@@ -21,6 +22,7 @@ OSL_OPTS["LINKSTATIC"] = "ON"
 OSL_OPTS["BUILDSTATIC"] = "ON" if osl_static else "OFF"
 OSL_OPTS["CMAKE_VERBOSE_MAKEFILE"] = "OFF"
 OSL_OPTS["EXTERNAL_LIBS"] = extern_libs
+OSL_OPTS["USE_LLVM_BITCODE"] = "ON" if use_llvm_bit_code else "OFF"
 
 
 ### dependencies
@@ -111,7 +113,8 @@ prjs.append({"name": "osl",
 
 excons.AddHelpOptions(osl="""OSL OPTIONS
   osl-static=0|1       : Toggle between static and shared library build [1]
-  osl-ext-libs=<str>   : Specify extra libraries for linking. []""")
+  osl-ext-libs=<str>   : Specify extra libraries for linking. []
+  osl-use-bit-code=0|1 : Toggle use llvm bitcode [1]""")
 
 osl_tgt = excons.DeclareTargets(env, prjs)
 
