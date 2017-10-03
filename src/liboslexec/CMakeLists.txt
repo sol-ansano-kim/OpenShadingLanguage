@@ -17,15 +17,14 @@ SET ( liboslexec_srcs
     )
 
 # oslcomp symbols used in oslexec
-if (BUILDSTATIC)
-    LIST(APPEND liboslexec_srcs
-        ../liboslcomp/ast.cpp
-        ../liboslcomp/codegen.cpp
-        ../liboslcomp/oslcomp.cpp
-        ../liboslcomp/symtab.cpp
-        ../liboslcomp/typecheck.cpp
-        )
-endif ()
+LIST(APPEND liboslexec_srcs
+    ../liboslcomp/ast.cpp
+    ../liboslcomp/codegen.cpp
+    ../liboslcomp/oslcomp.cpp
+    ../liboslcomp/symtab.cpp
+    ../liboslcomp/typecheck.cpp
+    )
+
 
 # oslnoise symbols used in oslexec
 LIST(APPEND liboslexec_srcs
@@ -34,11 +33,11 @@ LIST(APPEND liboslexec_srcs
    )
 
 # oslquery symbols used in oslexec
-if (NOT BUILDSTATIC)
-    LIST(APPEND liboslexec_srcs
-        ../liboslquery/oslquery.cpp
-        )
-endif ()
+
+LIST(APPEND liboslexec_srcs
+    ../liboslquery/oslquery.cpp
+    )
+
 
 include_directories ( "${CMAKE_SOURCE_DIR}/src/liboslcomp" )
 
@@ -155,10 +154,6 @@ TARGET_LINK_LIBRARIES ( oslexec
                         ${LLVM_LIBRARY} ${LLVM_MCJIT_LIBRARY}
                         ${LLVM_LIBRARIES} ${LLVM_LDFLAGS}
                         ${LLVM_SYSTEM_LIBRARIES})
-
-if (NOT BUILDSTATIC)
-    TARGET_LINK_LIBRARIES (oslexec oslcomp)
-endif ()
 
 if (EXTERNAL_LIBS)
     TARGET_LINK_LIBRARIES (oslexec ${EXTERNAL_LIBS})
