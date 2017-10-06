@@ -23,6 +23,7 @@ OSL_OPTS["BUILDSTATIC"] = "ON" if osl_static else "OFF"
 OSL_OPTS["CMAKE_VERBOSE_MAKEFILE"] = "OFF"
 OSL_OPTS["EXTERNAL_LIBS"] = extern_libs
 OSL_OPTS["USE_LLVM_BITCODE"] = "ON" if use_llvm_bit_code else "OFF"
+OSL_OPTS["USE_fPIC"] = "ON"
 
 
 ### dependencies
