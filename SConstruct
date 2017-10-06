@@ -14,7 +14,7 @@ oiio_static = excons.GetArgument("oiio-static", 1, int)
 boost_static = excons.GetArgument("boost-static", 1, int)
 extern_libs = excons.GetArgument("osl-ext-libs", "", str)
 osl_static = excons.GetArgument("osl-static", 1, int)
-use_llvm_bit_code = excons.GetArgument("osl-use-bit-code", 1, int)
+use_llvm_bit_code = excons.GetArgument("osl-use-bit-code", 0, int)
 
 OSL_OPTS = {}
 OSL_DEPENDENCIES = []
