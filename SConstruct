@@ -47,7 +47,7 @@ if not rv["require"]:
     excons.Call("llvm")
     OSL_OPTS["LLVM_DIRECTORY"] = out_basedir
     OSL_OPTS["LLVM_STATIC"] = "ON"
-    OSL_DEPENDENCIES.append("llvm.cmake.outputs")
+    OSL_DEPENDENCIES.append("%s/bin/llvm-config%s" % (excons.OutputBaseDirectory(), (".exe" if sys.platform == "win32" else "")))
 else:
     OSL_OPTS["LLVM_DIRECTORY"] = os.path.dirname(rv["incdir"])
     OSL_OPTS["LLVM_STATIC"] = "ON" if llvm_static else "OFF"

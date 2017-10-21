@@ -3,7 +3,7 @@
 	url = https://github.com/gatgui/excons
 [submodule "llvm"]
 	path = llvm
-	url = https://github.com/gatgui/llvm
+	url = https://github.com/sol-ansano-kim/llvm
 [submodule "oiio"]
 	path = oiio
 	url = https://github.com/sol-ansano-kim/oiio.git
